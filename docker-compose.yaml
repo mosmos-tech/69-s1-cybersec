@@ -19,3 +19,5 @@ services :
       - PGADMIN_DEFAULT_PASSWORD=thitinunt22
     ports:
       - 8081:80
+    volumes:
+      - ./admin-data:/var/lib/pgadmin
