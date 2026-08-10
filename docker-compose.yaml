@@ -27,3 +27,10 @@ services :
     container_name: 69-s1-app
     ports:
       - "9091:1337"
+    enviroment:
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=69-s1-db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=thitinunt
+      - DATABASE_USERNAME=thitinunt
+      - DATABASE_password=220947
