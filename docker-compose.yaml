@@ -1,0 +1,23 @@
+services :
+  db:
+    image: postgres:16-alpine
+    container_name: 69-s1-db
+    ports:
+      - 54327:5432
+    environment:
+      - POSTGRES_PASSWORD=220947
+      - POSTGRES_USER=thitinunt
+      - POSTGRES_DB=thitinunt
+    volumes:
+      - ./data:/var/lib/postgresql/data  
+
+  admin:
+    image: dpage/pgadmin4
+    container_name: 69-s1-admin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=mosmos1694@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=thitinunt22
+    ports:
+      - 8081:80
+    volumes:
+      - ./admin-data:/var/lib/pgadmin
