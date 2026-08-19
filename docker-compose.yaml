@@ -29,8 +29,8 @@ services :
       - "9091:1337"
     environment:
       - DATABASE_CLIENT=postgres
-      - DATABASE_HOST=69-s1-db
-      - DATABASE_PORT=5432
+      - DATABASE_HOST=172.30.124.136
+      - DATABASE_PORT=54327
       - DATABASE_NAME=thitinunt
       - DATABASE_USERNAME=thitinunt
       - DATABASE_PASSWORD=220947
