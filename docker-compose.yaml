@@ -10,14 +10,3 @@ services :
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - ./data:/var/lib/postgresql/data  
-
-  admin:
-    image: dpage/pgadmin4
-    container_name: 69-s1-admin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - ${PGADMIN_PORTS}
-    volumes:
-      - ./admin-data:/var/lib/pgadmin
