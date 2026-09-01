@@ -1,0 +1,82 @@
+#API
+
+### LOGIN (เข้าสู่ระบบของแอดมิน)
+# @name loginAdmin
+POST http://localhost:9091/admin/login
+Content-Type: application/json
+
+{
+    "email": "your_email@example.com",
+    "password": "your_password_here",
+    "rememberMe": false
+}
+
+###
+
+### Forgot (ลืมรหัสผ่านของแอดมิน)
+POST http://localhost:9091/admin/forgot-password
+Content-Type: application/json
+
+{
+    "email": "your_email@example.com"
+}
+
+###
+
+### Profile
+GET http://localhost:9091/admin/users/me
+Authorization: Bearer {{loginAdmin.response.body.data.token}}
+
+###
+
+### Register / Signup (สมัครแอดมินใหม่)
+POST http://localhost:9091/admin/register
+Content-Type: application/json
+
+{
+    "email": "your_email@example.com",
+    "password": "your_password_here",
+    "firstname": "YourFirstName",
+    "lastname": "YourLastName"
+}
+
+### ******************** ฝั่งของ User ทั่วไป *****************************
+
+### Register / Signup (สมัครสมาชิก User ทั่วไป)
+POST http://localhost:9091/api/auth/local/register
+Content-Type: application/json
+
+{
+    "username": "your_username",
+    "email": "your_email@example.com",
+    "password": "your_password_here"
+}
+
+### 
+
+### LOGIN (เข้าสู่ระบบ User ทั่วไป)
+# @name loginUser
+POST http://localhost:9091/api/auth/local
+Content-Type: application/json
+
+{
+    "identifier": "your_email@example.com",
+    "password": "your_password_here"
+}
+
+###
+
+### Profile (ดูข้อมูลส่วนตัวของ User)
+GET http://localhost:9091/api/users/me
+Authorization: Bearer {{loginUser.response.body.jwt}}
+###
+
+###
+
+### Forgot (ลืมรหัสผ่านของ User)
+POST http://localhost:9091/api/auth/forgot-password
+Content-Type: application/json
+
+{
+    "email": "your_email@example.com"
+}
