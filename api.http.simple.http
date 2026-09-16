@@ -1,4 +1,6 @@
-#API
+# ==========================  ADMIN  ==========================
+# ค่าคงที่ทั้งหมดอ่านจากไฟล์ .env ผ่าน {{$dotenv VAR}}
+# วิธีใช้: copy .env.simple เป็น .env แล้วกรอกค่าของจริง
 
 ### LOGIN (เข้าสู่ระบบของแอดมิน)
 # @name loginAdmin
@@ -6,19 +8,34 @@ POST http://localhost:9091/admin/login
 Content-Type: application/json
 
 {
-    "email": "your_email@example.com",
-    "password": "your_password_here",
+    "email": "{{$dotenv ADMIN_EMAIL}}",
+    "password": "{{$dotenv ADMIN_PASSWORD}}",
     "rememberMe": false
 }
 
 ###
 
-### Forgot (ลืมรหัสผ่านของแอดมิน)
+### Forgot (ลืมรหัสผ่านแอดมิน — ส่ง request แล้วได้ code จาก response)
+# @name forgotAdmin
 POST http://localhost:9091/admin/forgot-password
 Content-Type: application/json
 
 {
-    "email": "your_email@example.com"
+    "email": "{{$dotenv ADMIN_EMAIL}}"
+}
+
+###
+
+### Reset (รีเซ็ตรหัสผ่านแอดมิน — ใช้ code จาก forgotAdmin อัตโนมัติ)
+###   ⚠ ห้ามใส่ passwordConfirmation เด็ดขาด
+###   ⚠ ใส่รหัสใหม่ที่มี [a-z] + [A-Z] + [0-9] อย่างน้อย 8 ตัว
+# @name resetAdmin
+POST http://localhost:9091/admin/reset-password
+Content-Type: application/json
+
+{
+    "resetPasswordToken": "{{forgotAdmin.response.body.code}}",
+    "password": "{{$dotenv NEW_ADMIN_PASSWORD}}"
 }
 
 ###
@@ -29,27 +46,28 @@ Authorization: Bearer {{loginAdmin.response.body.data.token}}
 
 ###
 
-### Register / Signup (สมัครแอดมินใหม่)
+### Register / Signup (สมัครแอดมินใหม่ — ต้องมี registrationToken หรือยังไม่มี admin)
 POST http://localhost:9091/admin/register
 Content-Type: application/json
 
 {
-    "email": "your_email@example.com",
-    "password": "your_password_here",
-    "firstname": "YourFirstName",
-    "lastname": "YourLastName"
+    "email": "{{$dotenv ADMIN2_EMAIL}}",
+    "password": "{{$dotenv ADMIN2_PASSWORD}}",
+    "firstname": "{{$dotenv ADMIN2_FIRSTNAME}}",
+    "lastname": "{{$dotenv ADMIN2_LASTNAME}}"
 }
 
-### ******************** ฝั่งของ User ทั่วไป *****************************
 
-### Register / Signup (สมัครสมาชิก User ทั่วไป)
+# ==========================  USER  ==========================
+
+### Register / Signup (สมัครสมาชิก User ทั่วไป — ใช้เฉพาะตอนยังไม่มี user ในระบบ)
 POST http://localhost:9091/api/auth/local/register
 Content-Type: application/json
 
 {
-    "username": "your_username",
-    "email": "your_email@example.com",
-    "password": "your_password_here"
+    "username": "{{$dotenv USER_USERNAME}}",
+    "email": "{{$dotenv USER_EMAIL}}",
+    "password": "{{$dotenv USER_PASSWORD}}"
 }
 
 ### 
@@ -60,8 +78,8 @@ POST http://localhost:9091/api/auth/local
 Content-Type: application/json
 
 {
-    "identifier": "your_email@example.com",
-    "password": "your_password_here"
+    "identifier": "{{$dotenv USER_EMAIL}}",
+    "password": "{{$dotenv USER_PASSWORD}}"
 }
 
 ###
@@ -69,14 +87,31 @@ Content-Type: application/json
 ### Profile (ดูข้อมูลส่วนตัวของ User)
 GET http://localhost:9091/api/users/me
 Authorization: Bearer {{loginUser.response.body.jwt}}
-###
 
 ###
 
-### Forgot (ลืมรหัสผ่านของ User)
+### Forgot (ลืมรหัสผ่าน User — ส่ง request แล้วได้ code จาก response)
+# @name forgotUser
 POST http://localhost:9091/api/auth/forgot-password
+Content-Type: application/json
+Timeout: 30000
+
+{
+    "email": "{{$dotenv USER_EMAIL}}"
+}
+
+###
+
+### Reset (รีเซ็ตรหัสผ่าน User — ใช้ code จาก forgotUser อัตโนมัติ)
+###   ⚠ ต้องมี password + passwordConfirmation ทั้งคู่
+# @name resetUser
+POST http://localhost:9091/api/auth/reset-password
 Content-Type: application/json
 
 {
-    "email": "your_email@example.com"
+    "code": "{{forgotUser.response.body.code}}",
+    "password": "{{$dotenv NEW_USER_PASSWORD}}",
+    "passwordConfirmation": "{{$dotenv NEW_USER_PASSWORD}}"
 }
+
+###
