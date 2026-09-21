@@ -2,31 +2,45 @@
 # ค่าคงที่ทั้งหมดอ่านจากไฟล์ .env ผ่าน {{$dotenv VAR}}
 # วิธีใช้: copy .env.simple เป็น .env แล้วกรอกค่าของจริง
 
-### LOGIN (เข้าสู่ระบบของแอดมิน)
+### 1.1 LOGIN (เข้าสู่ระบบของแอดมิน)
 # @name loginAdmin
 POST http://localhost:9091/admin/login
 Content-Type: application/json
 
 {
-    "email": "{{$dotenv ADMIN_EMAIL}}",
-    "password": "{{$dotenv ADMIN_PASSWORD}}",
+    "email": "",
+    "password": "",
     "rememberMe": false
 }
 
 ###
 
-### Forgot (ลืมรหัสผ่านแอดมิน — ส่ง request แล้วได้ code จาก response)
+### 1.2 Register / Signup (สมัครแอดมินใหม่ — ต้องมี registrationToken หรือยังไม่มี admin)
+POST http://localhost:9091/admin/register
+Content-Type: application/json
+
+{
+    "email": "",
+    "password": "",
+    "firstname": "",
+    "lastname": ""
+}
+
+
+###
+
+### 1.3 Forgot (ลืมรหัสผ่านแอดมิน — ส่ง request แล้วได้ code จาก response)
 # @name forgotAdmin
 POST http://localhost:9091/admin/forgot-password
 Content-Type: application/json
 
 {
-    "email": "{{$dotenv ADMIN_EMAIL}}"
+    "email": ""
 }
 
 ###
 
-### Reset (รีเซ็ตรหัสผ่านแอดมิน — ใช้ code จาก forgotAdmin อัตโนมัติ)
+### 1.3.1 Reset (รีเซ็ตรหัสผ่านแอดมิน — ใช้ code จาก forgotAdmin อัตโนมัติ)
 ###   ⚠ ห้ามใส่ passwordConfirmation เด็ดขาด
 ###   ⚠ ใส่รหัสใหม่ที่มี [a-z] + [A-Z] + [0-9] อย่างน้อย 8 ตัว
 # @name resetAdmin
@@ -34,84 +48,74 @@ POST http://localhost:9091/admin/reset-password
 Content-Type: application/json
 
 {
-    "resetPasswordToken": "{{forgotAdmin.response.body.code}}",
-    "password": "{{$dotenv NEW_ADMIN_PASSWORD}}"
+    "resetPasswordToken": "",
+    "password": ""
 }
 
 ###
 
-### Profile
+### 1.4 Profile
 GET http://localhost:9091/admin/users/me
-Authorization: Bearer {{loginAdmin.response.body.data.token}}
+Authorization: Bearer
 
 ###
-
-### Register / Signup (สมัครแอดมินใหม่ — ต้องมี registrationToken หรือยังไม่มี admin)
-POST http://localhost:9091/admin/register
-Content-Type: application/json
-
-{
-    "email": "{{$dotenv ADMIN2_EMAIL}}",
-    "password": "{{$dotenv ADMIN2_PASSWORD}}",
-    "firstname": "{{$dotenv ADMIN2_FIRSTNAME}}",
-    "lastname": "{{$dotenv ADMIN2_LASTNAME}}"
-}
 
 
 # ==========================  USER  ==========================
 
-### Register / Signup (สมัครสมาชิก User ทั่วไป — ใช้เฉพาะตอนยังไม่มี user ในระบบ)
-POST http://localhost:9091/api/auth/local/register
-Content-Type: application/json
-
-{
-    "username": "{{$dotenv USER_USERNAME}}",
-    "email": "{{$dotenv USER_EMAIL}}",
-    "password": "{{$dotenv USER_PASSWORD}}"
-}
-
-### 
-
-### LOGIN (เข้าสู่ระบบ User ทั่วไป)
+### 2.1 LOGIN (เข้าสู่ระบบ User ทั่วไป)
 # @name loginUser
 POST http://localhost:9091/api/auth/local
 Content-Type: application/json
 
 {
-    "identifier": "{{$dotenv USER_EMAIL}}",
-    "password": "{{$dotenv USER_PASSWORD}}"
+    "identifier": "",
+    "password": ""
 }
 
 ###
 
-### Profile (ดูข้อมูลส่วนตัวของ User)
-GET http://localhost:9091/api/users/me
-Authorization: Bearer {{loginUser.response.body.jwt}}
+### 2.2 Register / Signup (สมัครสมาชิก User ทั่วไป — ใช้เฉพาะตอนยังไม่มี user ในระบบ)
+POST http://localhost:9091/api/auth/local/register
+Content-Type: application/json
+
+{
+    "username": "",
+    "email": "",
+    "password": ""
+}
 
 ###
 
-### Forgot (ลืมรหัสผ่าน User — ส่ง request แล้วได้ code จาก response)
+
+### 2.3 Forgot (ลืมรหัสผ่าน User — ส่ง request แล้วได้ code จาก response)
 # @name forgotUser
 POST http://localhost:9091/api/auth/forgot-password
 Content-Type: application/json
 Timeout: 30000
 
 {
-    "email": "{{$dotenv USER_EMAIL}}"
+    "email": ""
 }
 
 ###
 
-### Reset (รีเซ็ตรหัสผ่าน User — ใช้ code จาก forgotUser อัตโนมัติ)
+### 2.3.1 Reset (รีเซ็ตรหัสผ่าน User — ใช้ code จาก forgotUser อัตโนมัติ)
 ###   ⚠ ต้องมี password + passwordConfirmation ทั้งคู่
 # @name resetUser
 POST http://localhost:9091/api/auth/reset-password
 Content-Type: application/json
 
 {
-    "code": "{{forgotUser.response.body.code}}",
-    "password": "{{$dotenv NEW_USER_PASSWORD}}",
-    "passwordConfirmation": "{{$dotenv NEW_USER_PASSWORD}}"
+    "code": "",
+    "password": "",
+    "passwordConfirmation": ""
 }
+
+###
+
+### 2.4 Profile (ดูข้อมูลส่วนตัวของ User)
+GET http://localhost:9091/api/users/me
+Authorization: Bearer
 
 ###
