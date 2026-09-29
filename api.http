@@ -1,0 +1,269 @@
+# ==========================  ADMIN  ==========================
+# ค่าคงที่ทั้งหมดอ่านจากไฟล์ .env ผ่าน {{$dotenv VAR}}
+# วิธีใช้: copy .env.simple เป็น .env แล้วกรอกค่าของจริง
+
+### 1.1 LOGIN (เข้าสู่ระบบของแอดมิน)
+# @name loginAdmin
+POST http://localhost:9091/admin/login
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv ADMIN_EMAIL}}",
+    "password": "{{$dotenv ADMIN_PASSWORD}}",
+    "rememberMe": false
+}
+
+###
+
+### 1.2 Register / Signup (สมัครแอดมินใหม่ — ต้องมี registrationToken หรือยังไม่มี admin)
+POST http://localhost:9091/admin/register
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv ADMIN2_EMAIL}}",
+    "password": "{{$dotenv ADMIN2_PASSWORD}}",
+    "firstname": "{{$dotenv ADMIN2_FIRSTNAME}}",
+    "lastname": "{{$dotenv ADMIN2_LASTNAME}}"
+}
+
+###
+
+### 1.3 Forgot (ลืมรหัสผ่านแอดมิน — ส่ง request แล้วได้ code จาก response)
+# @name forgotAdmin
+POST http://localhost:9091/admin/forgot-password
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv ADMIN_EMAIL}}"
+}
+
+###
+
+### 1.3.1 Reset (รีเซ็ตรหัสผ่านแอดมิน — ใช้ code จาก forgotAdmin อัตโนมัติ)
+###   ⚠ ห้ามใส่ passwordConfirmation เด็ดขาด
+###   ⚠ ใส่รหัสใหม่ที่มี [a-z] + [A-Z] + [0-9] อย่างน้อย 8 ตัว
+# @name resetAdmin
+POST http://localhost:9091/admin/reset-password
+Content-Type: application/json
+
+{
+    "resetPasswordToken": "{{forgotAdmin.response.body.code}}",
+    "password": "{{$dotenv NEW_ADMIN_PASSWORD}}"
+}
+
+###
+
+### 1.4 Profile
+GET http://localhost:9091/admin/users/me
+Authorization: Bearer {{loginAdmin.response.body.data.token}}
+
+###
+
+
+# ==========================  USER  ==========================
+
+### 2.1 LOGIN (เข้าสู่ระบบ User ทั่วไป)
+# @name loginUser
+POST http://localhost:9091/api/auth/local
+Content-Type: application/json
+
+{
+    "identifier": "{{$dotenv USER_EMAIL}}",
+    "password": "{{$dotenv USER_PASSWORD}}"
+}
+
+###
+
+### 2.2 Register / Signup (สมัครสมาชิก User ทั่วไป — ใช้เฉพาะตอนยังไม่มี user ในระบบ)
+# @name registerUser
+POST http://localhost:9091/api/auth/local/register
+Content-Type: application/json
+
+{
+    "username": "bot_test_user",
+    "email": "bot_test_user@rmutp.ac.th",
+    "password": "BotTest1234"
+}
+
+###
+
+
+### 2.3 Forgot (ลืมรหัสผ่าน User — ส่ง request แล้วได้ code จาก response)
+# @name forgotUser
+POST http://localhost:9091/api/auth/forgot-password
+Content-Type: application/json
+Timeout: 30000
+
+{
+    "email": "{{$dotenv USER_EMAIL}}"
+}
+
+###
+
+
+### 2.3.1 Reset (รีเซ็ตรหัสผ่าน User — ใช้ code จาก forgotUser อัตโนมัติ)
+###   ⚠ ต้องมี password + passwordConfirmation ทั้งคู่
+# @name resetUser
+POST http://localhost:9091/api/auth/reset-password
+Content-Type: application/json
+
+{
+    "code": "{{forgotUser.response.body.code}}",
+    "password": "{{$dotenv NEW_USER_PASSWORD}}",
+    "passwordConfirmation": "{{$dotenv NEW_USER_PASSWORD}}"
+}
+
+###
+
+
+### 2.4 Profile (ดูข้อมูลส่วนตัวของ User)
+GET http://localhost:9091/api/users/me
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+
+## 3.content
+### 3.1 Student
+#### 3.1.1 Create Student
+# @name createStudent
+POST http://localhost:9091/api/students
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Student",
+        "mobile": "0888888888",
+        "cardId": "STU8888888888"
+    }
+}
+
+###
+
+#### 3.1.2 Get all Student
+GET http://localhost:9091/api/students
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.1.3 Get Student by ID
+GET http://localhost:9091/api/students/{{createStudent.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.1.4 Update Student
+# @name updateStudent
+PUT http://localhost:9091/api/students/{{createStudent.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Student Updated",
+        "mobile": "0877777777"
+    }
+}
+
+###
+
+#### 3.1.5 Delete Student
+DELETE http://localhost:9091/api/students/{{createStudent.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+### 3.2 Teacher
+#### 3.2.1 Create Teacher
+# @name createTeacher
+POST http://localhost:9091/api/teachers
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Teacher"
+    }
+}
+
+###
+
+#### 3.2.2 Get all Teacher
+GET http://localhost:9091/api/teachers
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.2.3 Get Teacher by ID
+GET http://localhost:9091/api/teachers/{{createTeacher.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.2.4 Update Teacher
+# @name updateTeacher
+PUT http://localhost:9091/api/teachers/{{createTeacher.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Teacher Updated"
+    }
+}
+
+###
+
+#### 3.2.5 Delete Teacher
+DELETE http://localhost:9091/api/teachers/{{createTeacher.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+### 3.3 Subject
+#### 3.3.1 Create Subject
+# @name createSubject
+POST http://localhost:9091/api/subjects
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Subject"
+    }
+}
+
+###
+
+#### 3.3.2 Get all Subject
+GET http://localhost:9091/api/subjects
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.3.3 Get Subject by ID
+GET http://localhost:9091/api/subjects/{{createSubject.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.3.4 Update Subject
+# @name updateSubject
+PUT http://localhost:9091/api/subjects/{{createSubject.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "Demo Subject Updated"
+    }
+}
+
+###
+
+#### 3.3.5 Delete Subject
+DELETE http://localhost:9091/api/subjects/{{createSubject.response.body.data.id}}
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
