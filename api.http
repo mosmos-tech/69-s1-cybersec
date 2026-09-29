@@ -146,7 +146,13 @@ Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
 
-#### 3.1.3 Update Student
+#### 3.1.3 Get Student by ID
+GET http://localhost:9091/api/students/2
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.1.4 Update Student
 # @name updateStudent
 PUT http://localhost:9091/api/students/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
@@ -161,14 +167,8 @@ Content-Type: application/json
 
 ###
 
-#### 3.1.4 Delete Student
+#### 3.1.5 Delete Student
 DELETE http://localhost:9091/api/students/2
-Authorization: Bearer {{loginUser.response.body.jwt}}
-
-###
-
-#### 3.1.5 Get Student by ID
-GET http://localhost:9091/api/students/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
@@ -194,7 +194,13 @@ Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
 
-#### 3.2.3 Update Teacher
+#### 3.2.3 Get Teacher by ID
+GET http://localhost:9091/api/teachers/2
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.2.4 Update Teacher
 # @name updateTeacher
 PUT http://localhost:9091/api/teachers/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
@@ -208,14 +214,8 @@ Content-Type: application/json
 
 ###
 
-#### 3.2.4 Delete Teacher
+#### 3.2.5 Delete Teacher
 DELETE http://localhost:9091/api/teachers/2
-Authorization: Bearer {{loginUser.response.body.jwt}}
-
-###
-
-#### 3.2.5 Get Teacher by ID
-GET http://localhost:9091/api/teachers/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
@@ -241,7 +241,13 @@ Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
 
-#### 3.3.3 Update Subject
+#### 3.3.3 Get Subject by ID
+GET http://localhost:9091/api/subjects/2
+Authorization: Bearer {{loginUser.response.body.jwt}}
+
+###
+
+#### 3.3.4 Update Subject
 # @name updateSubject
 PUT http://localhost:9091/api/subjects/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
@@ -255,14 +261,8 @@ Content-Type: application/json
 
 ###
 
-#### 3.3.4 Delete Subject
+#### 3.3.5 Delete Subject
 DELETE http://localhost:9091/api/subjects/2
-Authorization: Bearer {{loginUser.response.body.jwt}}
-
-###
-
-#### 3.3.5 Get Subject by ID
-GET http://localhost:9091/api/subjects/2
 Authorization: Bearer {{loginUser.response.body.jwt}}
 
 ###
