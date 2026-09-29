@@ -75,13 +75,14 @@ Content-Type: application/json
 ###
 
 ### 2.2 Register / Signup (สมัครสมาชิก User ทั่วไป — ใช้เฉพาะตอนยังไม่มี user ในระบบ)
+# @name registerUser
 POST http://localhost:9091/api/auth/local/register
 Content-Type: application/json
 
 {
-    "username": "{{$dotenv USER_USERNAME}}",
-    "email": "{{$dotenv USER_EMAIL}}",
-    "password": "{{$dotenv USER_PASSWORD}}"
+    "username": "bot_test_user",
+    "email": "bot_test_user@rmutp.ac.th",
+    "password": "BotTest1234"
 }
 
 ###
